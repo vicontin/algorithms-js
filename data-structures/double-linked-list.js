@@ -1,4 +1,9 @@
-
+/*
+ * Insertion -> O(1) 
+ * Removal -> O(1)
+ * Searching -> O(N)
+ * Access -> O(N)
+ */
 
 class Node {
     constructor(val) {
@@ -121,14 +126,73 @@ class DoubleLinkedList {
         }
         return false;
     }
+
+    //Inserts a new node at the specified position if appropriate
+    insert(position, val) {
+        if(position < 0 || position > this.length) {
+            return false;
+        }
+        if(position == 0) {
+            return !!this.unshift(val);
+            
+        }
+        if(position == this.length) {
+            return !!this.push(val);
+        }
+
+        const newNode = new Node(val);
+        const previousNode = this.get(position -1);
+        
+        if(previousNode) {
+            const nextNode = previousNode.next;
+            newNode.prev = previousNode;
+            newNode.next = nextNode;
+            nextNode.prev = newNode;
+            previousNode.next = newNode;
+            this.length++;
+            return true;
+        }
+        return false;
+    }
+
+    //Removes the item at the specified position, if found
+    remove(position) {
+        if(position < 0 || position >= this.length) {
+            return undefined;
+        }
+        if(position === 0) {
+            return this.shift();
+            
+        }
+        if(position === this.length - 1) {
+            return this.pop();
+        }
+
+        const removed = this.get(position);
+
+        if(this.removed) {
+            const nextNode = removed.next;
+            const prevNode = removed.prev;
+
+            nextNode.prev = prevNode;
+            prevNode.next = nextNode;
+            removed.next = null;
+            removed.prev = null;
+            this.length--;
+        }
+        return removed;
+    }
 }
 
-// const dl = new DoubleLinkedList();
-// dl.push(1);
-// dl.push(2);
-// dl.push(50);
-// dl.push(100);
-// dl.push(500);
+const dl = new DoubleLinkedList();
+dl.push(1);
+dl.push(2);
+dl.push(50);
+dl.push(100);
+dl.push(500);
+console.log(dl);
+console.log(dl.remove(1))
+console.log(dl);
 // console.log(dl);
 // console.log(dl.get(1));
 // console.log(dl.get(4));
